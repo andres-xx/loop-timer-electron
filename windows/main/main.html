@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <link rel="stylesheet" href="main.css" />
+    <title>Hello World!</title>
+  </head>
+  <body>
+    <div class="toHide">
+      <label for="timer">Durée du minuteur (en minutes) :</label>
+      <input type="number" id="timer" min="0" max="60" value="0" />
+      <button id="startButton">Start</button>
+      <button id="resetButton">Reset</button>
+      
+      <button id="addTimerButton">+</button>
+      <button id="hideButton">show only timer</button>
+      <br />
+      <label for="loopCheckbox">Relancer en boucle</label>
+      <input type="checkbox" id="loopCheckbox" />
+    </div>
+    <button id="continueButton">Continue</button>
+    <button id="showButton">Show all</button>
+    <ul id="timersContent"></ul>
+    <script src="main.js"></script>
+    <script src="../../electron/renderer.js"></script>
+  </body>
+</html>
