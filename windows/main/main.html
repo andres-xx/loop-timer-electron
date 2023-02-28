@@ -11,22 +11,36 @@
     <title>Hello World!</title>
   </head>
   <body>
+    
+    <div id="titleBar">
+      <div id="showButton">
+        <span>&crarr;</span>
+      </div>
+      <div id="minimize"  class="toHide">
+        <span>&#95;</span>
+      </div>
+      <div id="maximize"  class="toHide">
+        <span>&#128470;</span>
+      </div>
+      <div id="close">
+        <span>&times;</span>
+      </div>
+    </div>
+    
     <div class="toHide">
-      <label for="timer">Durée du minuteur (en minutes) :</label>
+      <label for="timer">Timers (minutes) :</label>
       <input type="number" id="timer" min="0" max="60" value="0" />
+      <button id="addTimerButton">Add</button>
       <button id="startButton">Start</button>
       <button id="resetButton">Reset</button>
+      <button id="hideButton">Focus timer</button>
       
-      <button id="addTimerButton">+</button>
-      <button id="hideButton">show only timer</button>
-      <br />
-      <label for="loopCheckbox">Relancer en boucle</label>
+      <label for="loopCheckbox">Loop</label>
       <input type="checkbox" id="loopCheckbox" />
     </div>
-    <button id="continueButton">Continue</button>
-    <button id="showButton">Show all</button>
+    
     <ul id="timersContent"></ul>
     <script src="main.js"></script>
-    <script src="../../electron/renderer.js"></script>
+    <!-- <script src="../../electron/renderer.js"></script> -->
   </body>
 </html>

@@ -1,7 +1,13 @@
 const { contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('electronAPI', {
-    setTitle: (title) => ipcRenderer.send('set-title', title)
+    setMainWin: () => ipcRenderer.send('set-main-win'),
+    setFocusWin: () => ipcRenderer.send('set-focus-win'),
+    showNotif: () => ipcRenderer.send('show-notif'),
+    closeWindows: () => ipcRenderer.send('close-windows'),
+    minimizeWindows: () => ipcRenderer.send('minimize-windows'),
+    maximizeWindows: () => ipcRenderer.send('maximize-windows'),
+    runNextTimer: (callback) => ipcRenderer.on('run-next-timer', callback)
 })
 
 //default code

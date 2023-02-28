@@ -1,3 +1,5 @@
+//const { ipcRenderer } = require("electron");
+
 var timer = document.getElementById("timer");
 var startButton = document.getElementById("startButton");
 var resetButton = document.getElementById("resetButton");
@@ -5,10 +7,16 @@ var addTimerButton = document.getElementById("addTimerButton");
 var loopCheckbox = document.getElementById("loopCheckbox");
 var timerDisplay = document.getElementsByClassName("timerDisplay");
 let listTimers = document.getElementById("timersContent");
-let continueButton = document.getElementById("continueButton");
 let hideButton = document.getElementById("hideButton");
-let toHideHTML = document.getElementsByClassName('toHide');
+let toHideHTML = document.getElementsByClassName("toHide");
 let showButton = document.getElementById("showButton");
+let closeButton = document.getElementById("close");
+let minButton = document.getElementById("minimize");
+let maxButton = document.getElementById("maximize");
+let titleBarHTML = document.getElementById("titleBar");
+
+
+
 var intervalIds = [];
 var currentIntervalId;
 var loopEnabled = false;
@@ -18,40 +26,40 @@ let secTimer = 0;
 let canContinue = false;
 let hide = false;
 
-
 function startTimers(secTimer) {
   secTimer--;
-  
+
   timerDisplay[iTimer].innerHTML = toHHMMSS(secTimer);
-  
+
   currentIntervalId = setInterval(function () {
     secTimer--;
-  
+
     //minuteur fini
     if (secTimer < 0) {
       timerDisplay[iTimer].innerHTML = toHHMMSS(intervalIds[iTimer]);
-      
+
       clearInterval(currentIntervalId);
       canContinue = true;
+      window.electronAPI.showNotif();
       //si c'est pas le dernier minuteur
       if (iTimer < intervalIds.length - 1) {
-        if(hide){
-          timerDisplay[iTimer].style.display = 'none';
+        if (hide) {
+          timerDisplay[iTimer].style.display = "none";
         }
         iTimer++;
-        timerDisplay[iTimer].style.display = 'inline';
         
-        //startTimers(intervalIds[iTimer]);
-        
+        timerDisplay[iTimer].style.display = "flex";
+
+      
       } else {
-        if(hide){
-          timerDisplay[iTimer].style.display = 'none';
-          timerDisplay[0].style.display = 'inline';
+        if (hide) {
+          timerDisplay[iTimer].style.display = "none";
+          timerDisplay[0].style.display = "flex";
         }
         iTimer = 0;
 
         if (!loopEnabled) {
-          canContinue = false
+          canContinue = false;
         }
       }
       return;
@@ -62,57 +70,58 @@ function startTimers(secTimer) {
   }, 1000);
 }
 
-
 function stopTimer() {
   clearInterval(currentIntervalId);
   intervalIds = [];
 }
 
-
 startButton.addEventListener("click", function () {
   clearInterval(currentIntervalId);
-  
+
   iTimer = 0;
   if (intervalIds.length > 0) {
     for (let i = 0; i < intervalIds.length; i++) {
       timerDisplay[i].innerHTML = toHHMMSS(intervalIds[i]);
     }
     startTimers(intervalIds[0]);
-    
   } else {
-    console.log("Aucun minuteur ajouté");
+    console.log("No timer exists");
   }
 });
 
-
 hideButton.addEventListener("click", function () {
-  hide = true;
-  console.log(toHideHTML.length);
-  //on selectionne toutes classes à cacher pour les cacher
-  for (let i = 0; i < toHideHTML.length; i++) {
-    toHideHTML[i].style.display = 'none';
+  if (intervalIds.length) {
+    hide = true;
+    showButton.style.display = "flex";
+    titleBarHTML.style.justifyContent = "space-between";
+    //on selectionne toutes classes à cacher pour les cacher
+    for (let i = 0; i < toHideHTML.length; i++) {
+      toHideHTML[i].style.display = "none";
+    }
+    timerDisplay[iTimer].style.display = "flex";
+    window.electronAPI.setMainWin();
   }
-  timerDisplay[iTimer].style.display = 'inline';
+  else{
+    console.log("No timer exists");
+  }
 });
 
 showButton.addEventListener("click", function () {
+  if (hide) {
+    showButton.style.display = "none";
+    titleBarHTML.style.justifyContent = "flex-end";
+    for (let i = 0; i < toHideHTML.length; i++) {
+      if(i <= 3){
+        toHideHTML[i].style.display = "inline";
+      }else{
+        toHideHTML[i].style.display = "flex";
+      }
+    }
+    window.electronAPI.setFocusWin();
+  }
+
   hide = false;
-  for (let i = 0; i < toHideHTML.length; i++) {
-    toHideHTML[i].style.display = 'inline';
-  }
-  
 });
-
-
-
-
-continueButton.addEventListener("click", function () {
-  if(canContinue){
-    startTimers(intervalIds[iTimer]);
-    canContinue = false;
-  }
-});
-
 
 resetButton.addEventListener("click", function () {
   stopTimer();
@@ -120,23 +129,29 @@ resetButton.addEventListener("click", function () {
   listTimers.innerHTML = "";
 });
 
-
 addTimerButton.addEventListener("click", function () {
   if (timer.value > 0) {
-    var duration = timer.value;
+    var duration = timer.value * 60;
     intervalIds.push(duration);
     displayTimers();
     console.log(intervalIds);
   } else {
-    console.log("Minuteur vide");
+    console.log("Change timer time");
   }
 });
 
 
+window.electronAPI.runNextTimer(() => {
+  console.log("Ouiii");
+  if (canContinue) {
+    startTimers(intervalIds[iTimer]);
+    canContinue = false;
+  }
+})
+
 loopCheckbox.addEventListener("change", function () {
   loopEnabled = loopCheckbox.checked;
 });
-
 
 function displayTimers() {
   let fragment = document.createDocumentFragment();
@@ -157,7 +172,6 @@ function displayTimers() {
   listTimers.appendChild(fragment); // Ajoute le document fragment contenant tous les éléments li au DOM
 }
 
-
 function toHHMMSS(secondes) {
   var sec_num = parseInt(secondes, 10); // don't forget the second param
   var hours = Math.floor(sec_num / 3600);
@@ -175,3 +189,22 @@ function toHHMMSS(secondes) {
   }
   return hours + ":" + minutes + ":" + seconds;
 }
+
+
+closeButton.addEventListener("click", function () {
+  console.log("close");
+  window.electronAPI.closeWindows();
+  
+});
+
+minButton.addEventListener("click", function () {
+  console.log("min");
+  window.electronAPI.minimizeWindows();
+  
+});
+
+maxButton.addEventListener("click", function () {
+  console.log("max");
+  window.electronAPI.maximizeWindows();
+});
+

@@ -5,13 +5,14 @@
   "main": "electron/main.js",
   "scripts": {
     "start": "electron .",
-    "watch": "nodemon --exec electron .",
+    "watch": "nodemon --exec electron .", 
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Andres",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^23.0.0"
+    "electron": "^23.0.0",
+    "electron-reloader": "^1.2.3"
   },
   "dependencies": {
     "readline": "^1.3.0"
