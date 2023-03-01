@@ -1,4 +1,3 @@
-//const { ipcRenderer } = require("electron");
 
 var timer = document.getElementById("timer");
 var startButton = document.getElementById("startButton");
@@ -49,8 +48,7 @@ function startTimers(secTimer) {
         iTimer++;
         
         timerDisplay[iTimer].style.display = "flex";
-
-      
+  
       } else {
         if (hide) {
           timerDisplay[iTimer].style.display = "none";
@@ -194,13 +192,11 @@ function toHHMMSS(secondes) {
 closeButton.addEventListener("click", function () {
   console.log("close");
   window.electronAPI.closeWindows();
-  
 });
 
 minButton.addEventListener("click", function () {
   console.log("min");
   window.electronAPI.minimizeWindows();
-  
 });
 
 maxButton.addEventListener("click", function () {

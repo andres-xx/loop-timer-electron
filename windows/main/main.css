@@ -84,6 +84,7 @@ button:hover {
   width: 100px;
 }
 
+/* Effacer les fleches  */
 #timer::-webkit-outer-spin-button,
 #timer::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -106,34 +107,6 @@ button:hover {
   color: black;
   display: flex;
   justify-content: space-around;
-  /* background-color: #f8f8f8;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); */
 }
 
-.timerDisplay.timerDone {
-  animation: timerDone 1s ease-in-out forwards;
-}
 
-@keyframes timerDone {
-  from {
-    color: #f44336;
-  }
-  to {
-    color: #4caf50;
-  }
-}
-
-/* .timerDisplay.timers{
-    animation: timerDone 1s ease-in-out forwards;
-  } */
-
-@keyframes restart {
-  from {
-    color: #f44336;
-  }
-  to {
-    color: #4caf50;
-  }
-}
