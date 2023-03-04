@@ -1,6 +1,8 @@
 const { app, BrowserWindow, ipcMain, screen } = require("electron");
 const { Notification } = require('electron')
 const path = require("path");
+const notifier = require('node-notifier');
+
 
 try {
 	require('electron-reloader')(module);
@@ -14,6 +16,8 @@ let mainHeight = 700;
 let focusWidth = 100;
 let focusHeight = 58;
 let notification;
+
+
 
 const createWindow = () => {
   // Création de la fenêtre de navigateur.
@@ -29,7 +33,7 @@ const createWindow = () => {
   });
   
   //afficher la console
-  //mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
   // et chargement de l'index.html de l'application.
   mainWindow.loadFile("windows/main/main.html");
 };
@@ -70,8 +74,7 @@ function showNotification(){
     body: 'Click to start the next timer',
     buttons: [],
     timeoutType: 'never',
-    silent: false, // Activer le son de la notification
-    sound: 'rain.mp3'
+    silent: true
   })
   
   notification.show();
