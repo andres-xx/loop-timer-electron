@@ -33,7 +33,7 @@ const createWindow = () => {
   });
   
   //afficher la console
-  //mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
   // et chargement de l'index.html de l'application.
   mainWindow.loadFile("windows/main/main.html");
 };

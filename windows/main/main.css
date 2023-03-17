@@ -99,6 +99,32 @@ button:hover {
   margin: 0;
 }
 
+/* Ajouter du design à la case, remplacer les couleurs pour vous adapter à votre palette colorimétrique */
+/* Utiliser les sélecteurs d'attributs pour cibler les checkboxes spécifiques */
+input[type="checkbox"]{
+  /* Utiliser les unités de vue pour une échelle adaptable */
+  transform: scale(1.5); /* Agrandir la taille */
+  transition: all 0.3s; /* Ajouter une transition fluide lorsqu'elle est cochée */
+  
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  outline: none; /* Supprimer le contour visible après la sélection */
+}
+
+/* Styles au survol des checkboxes */
+input[type="checkbox"]:hover {
+  border-color: dodgerblue;
+}
+
+/* Styles lorsqu'une checkbox est cochée */
+input[type="checkbox"]:checked {
+  background-color: dodgerblue; /* Ajouter un fond bleu */
+  border-color: dodgerblue;
+}
+
+
+
+
 #timer:focus {
   outline: none;
 }
@@ -118,3 +144,44 @@ button:hover {
 }
 
 
+.volume-container {
+	width: 300px;
+  margin-left: 25%;
+  margin-bottom: 30px;
+	height: 15px;
+	background-color: #ddd;
+	border-radius: 5px;
+	position: relative;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.volume-bar {
+	width: 109%;
+	height: 100%;
+	background-color: #aaa;
+	border-radius: 5px;
+	overflow: hidden;
+	cursor: pointer;
+}
+
+#volume-indicator {
+	position: absolute;
+  left: 50%;
+	top: -5px;
+	width: 20px;
+	height: 25px;
+	background-color: #333;
+	border-radius: 5px;
+	opacity: 0.7;
+	pointer-events: none;
+}
+
+.volume-label {
+	font-size: 14px;
+	margin-top: 5px;
+	color: #666;
+	font-weight: bold;
+	text-align: center;
+	text-shadow: 1px 1px #fff;
+}

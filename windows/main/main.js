@@ -13,11 +13,15 @@ let closeButton = document.getElementById("close");
 let minButton = document.getElementById("minimize");
 let maxButton = document.getElementById("maximize");
 let titleBarHTML = document.getElementById("titleBar");
+let volumeBar = document.getElementById("volume-bar");
+let volumeIndicator = document.getElementById("volume-indicator");
+let volumeLabel = document.querySelector(".volume-label");
+
 let soundNotif = new Audio();
 soundNotif.src = "rain.mp3";
 const fade_step = soundNotif.volume / (1000 / 10);
+soundNotif.volume = 0.5 // 0 to 1 max sound power
 const originalVolume = soundNotif.volume;
-
 
 var intervalIds = [];
 var currentIntervalId;
@@ -225,3 +229,37 @@ maxButton.addEventListener("click", function () {
   window.electronAPI.maximizeWindows();
 });
 
+
+
+
+volumeBar.addEventListener("click", function(event) {
+	updateVolume(event);
+});
+
+volumeBar.addEventListener("mousedown", function(event) {
+	document.addEventListener("mousemove", updateVolume);
+});
+
+document.addEventListener("mouseup", function(event) {
+	document.removeEventListener("mousemove", updateVolume);
+});
+
+function updateVolume(event) {
+	let volume = (event.clientX - volumeBar.getBoundingClientRect().left) / volumeBar.offsetWidth;
+  if(volume > 1){
+    volume = 1;
+  }
+  if(volume < 0){
+    volume = 0;
+  }
+  console.log(volume);
+	soundNotif.volume = volume;
+	volumeIndicator.style.left = volume * 100 + "%";
+	volumeBar.setAttribute("aria-valuenow", volume * 100);
+	volumeLabel.textContent = Math.round(volume * 100) + "%";
+	
+	// Désactive la modification du son lorsque l'utilisateur relâche le clic de la souris
+	if (event.type === "mouseup") {
+		document.removeEventListener("mousemove", updateVolume);
+	}
+}
