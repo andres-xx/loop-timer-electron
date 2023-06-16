@@ -31,12 +31,14 @@ let timerNow = "";
 let secTimer = 0;
 let canContinue = false;
 let hide = false;
+let backupTimer = 0
+let firstTime = true
 
 function startTimers(secTimer) {
   secTimer--;
-
+  
   timerDisplay[iTimer].innerHTML = toHHMMSS(secTimer);
-
+  backupTimer = secTimer;
   currentIntervalId = setInterval(function () {
     secTimer--;
 
@@ -70,8 +72,8 @@ function startTimers(secTimer) {
       }
       return;
     }
-
     timerDisplay[iTimer].innerHTML = toHHMMSS(secTimer);
+    backupTimer = secTimer;
   }, 1000);
 }
 
@@ -97,16 +99,24 @@ function stopTimer() {
 
 startButton.addEventListener("click", function () {
   clearInterval(currentIntervalId);
+    startButton.disabled = true;
+    pauseButton.disabled = false;
+    resetButton.disabled = false;
 
-  iTimer = 0;
   if (intervalIds.length > 0) {
     for (let i = 0; i < intervalIds.length; i++) {
       timerDisplay[i].innerHTML = toHHMMSS(intervalIds[i]);
     }
-    startTimers(intervalIds[0]);
+    if (firstTime){
+        startTimers(intervalIds[iTimer]);
+        firstTime = false
+    }
+    else
+        startTimers(backupTimer)
   } else {
     console.log("No timer exists");
   }
+
 });
 
 maxMinButton.addEventListener("click", function () {
@@ -144,10 +154,17 @@ showButton.addEventListener("click", function () {
 
 pauseButton.addEventListener("click", function () {
   clearInterval(currentIntervalId);
+    startButton.disabled = false;
+    pauseButton.disabled = true;
+    resetButton.disabled = false;
 });
 
 resetButton.addEventListener("click", function () {
   stopTimer();
+  firstTime = true;
+    startButton.disabled = false;
+    pauseButton.disabled = true;
+    resetButton.disabled = true;
   timerDisplay.textContent = "00:00:00";
   listTimers.innerHTML = "";
 });
