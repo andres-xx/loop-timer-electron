@@ -6,49 +6,52 @@
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self'"
     />
-    
+
     <link rel="stylesheet" href="main.css" />
     <title>Hello World!</title>
   </head>
   <body>
-    
     <div id="titleBar">
       <div id="showButton">
         <span>&crarr;</span>
       </div>
-      <div id="minimize"  class="toHide">
+      <div id="minimize" class="toHide">
         <span>&#95;</span>
       </div>
-      <div id="maximize"  class="toHide">
+      <div id="maximize" class="toHide">
         <span>&#128470;</span>
       </div>
       <div id="close">
         <span>&times;</span>
       </div>
     </div>
-    
+
     <div class="toHide">
       <label for="timer">Timers (minutes) :</label>
       <input type="number" id="timer" min="0" max="60" value="0" />
-      <button id="addTimerButton">Add</button>
-      <button id="startButton">Start</button>
-      <button id="resetButton">STOP</button>
-      <button id="hideButton">Focus timer</button>
-      <div>
-        <img class="fit-picture" src="sound-icon.png" width="40px"
-        alt="sound icon">
-      </div>
+      <button id="addTimerButton"><span>&#43;</span></button>
+      <button id="startButton">▶</button>
+      <button id="pauseButton"> <span>&#9616;&#9616;</span></button>
+      <button id="resetButton"><span>&#9632;</span></button>
+      <button id="maxMinButton"><strong><span>&#8625;</span></strong></button>
+      <div id="soundIcon">&#128362;</div>
       <div class="volume-container">
-        
-        <div id="volume-bar" class="volume-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+        <div
+          id="volume-bar"
+          class="volume-bar"
+          role="progressbar"
+          aria-valuenow="50"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
           <div id="volume-indicator"></div>
         </div>
         <div class="volume-label">50%</div>
       </div>
       <label for="loopCheckbox">Loop</label>
-      <input type="checkbox" id="loopCheckbox" />
+      <input type="checkbox" id="loopCheckbox" checked/>
     </div>
-    
+
     <ul id="timersContent"></ul>
     <script src="main.js"></script>
   </body>

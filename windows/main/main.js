@@ -1,12 +1,12 @@
-
 var timer = document.getElementById("timer");
 var startButton = document.getElementById("startButton");
 var resetButton = document.getElementById("resetButton");
 var addTimerButton = document.getElementById("addTimerButton");
 var loopCheckbox = document.getElementById("loopCheckbox");
 var timerDisplay = document.getElementsByClassName("timerDisplay");
+let pauseButton = document.getElementById("pauseButton");
 let listTimers = document.getElementById("timersContent");
-let hideButton = document.getElementById("hideButton");
+let maxMinButton = document.getElementById("maxMinButton");
 let toHideHTML = document.getElementsByClassName("toHide");
 let showButton = document.getElementById("showButton");
 let closeButton = document.getElementById("close");
@@ -20,12 +20,12 @@ let volumeLabel = document.querySelector(".volume-label");
 let soundNotif = new Audio();
 soundNotif.src = "rain.mp3";
 const fade_step = soundNotif.volume / (1000 / 10);
-soundNotif.volume = 0.5 // 0 to 1 max sound power
+soundNotif.volume = 0.5; // 0 to 1 max sound power
 const originalVolume = soundNotif.volume;
 
 var intervalIds = [];
 var currentIntervalId;
-var loopEnabled = false;
+var loopEnabled = true;
 let iTimer = 0;
 let timerNow = "";
 let secTimer = 0;
@@ -55,9 +55,8 @@ function startTimers(secTimer) {
           timerDisplay[iTimer].style.display = "none";
         }
         iTimer++;
-        
+
         timerDisplay[iTimer].style.display = "flex";
-  
       } else {
         if (hide) {
           timerDisplay[iTimer].style.display = "none";
@@ -78,13 +77,12 @@ function startTimers(secTimer) {
 
 function fadeOut() {
   if (soundNotif.volume > 0) {
-    if (soundNotif.volume - fade_step > 0){
+    if (soundNotif.volume - fade_step > 0) {
       soundNotif.volume -= fade_step;
-    }
-    else{
+    } else {
       soundNotif.volume = 0;
     }
-    
+
     setTimeout(fadeOut, 10);
   } else {
     soundNotif.pause();
@@ -111,7 +109,7 @@ startButton.addEventListener("click", function () {
   }
 });
 
-hideButton.addEventListener("click", function () {
+maxMinButton.addEventListener("click", function () {
   if (intervalIds.length) {
     hide = true;
     showButton.style.display = "flex";
@@ -122,8 +120,7 @@ hideButton.addEventListener("click", function () {
     }
     timerDisplay[iTimer].style.display = "flex";
     window.electronAPI.setMainWin();
-  }
-  else{
+  } else {
     console.log("No timer exists");
   }
 });
@@ -133,9 +130,9 @@ showButton.addEventListener("click", function () {
     showButton.style.display = "none";
     titleBarHTML.style.justifyContent = "flex-end";
     for (let i = 0; i < toHideHTML.length; i++) {
-      if(i <= 3){
+      if (i <= 3) {
         toHideHTML[i].style.display = "inline";
-      }else{
+      } else {
         toHideHTML[i].style.display = "flex";
       }
     }
@@ -143,6 +140,10 @@ showButton.addEventListener("click", function () {
   }
 
   hide = false;
+});
+
+pauseButton.addEventListener("click", function () {
+  clearInterval(currentIntervalId);
 });
 
 resetButton.addEventListener("click", function () {
@@ -161,17 +162,15 @@ addTimerButton.addEventListener("click", function () {
   }
 });
 
-
 window.electronAPI.runNextTimer(() => {
   soundNotif.pause();
   //Play sound between 0 and 14min next time
   soundNotif.currentTime = Math.random() * 840;
   if (canContinue) {
-    
     startTimers(intervalIds[iTimer]);
     canContinue = false;
   }
-})
+});
 
 loopCheckbox.addEventListener("change", function () {
   loopEnabled = loopCheckbox.checked;
@@ -213,7 +212,6 @@ function toHHMMSS(secondes) {
   return hours + ":" + minutes + ":" + seconds;
 }
 
-
 closeButton.addEventListener("click", function () {
   console.log("close");
   window.electronAPI.closeWindows();
@@ -229,37 +227,36 @@ maxButton.addEventListener("click", function () {
   window.electronAPI.maximizeWindows();
 });
 
-
-
-
-volumeBar.addEventListener("click", function(event) {
-	updateVolume(event);
+volumeBar.addEventListener("click", function (event) {
+  updateVolume(event);
 });
 
-volumeBar.addEventListener("mousedown", function(event) {
-	document.addEventListener("mousemove", updateVolume);
+volumeBar.addEventListener("mousedown", function (event) {
+  document.addEventListener("mousemove", updateVolume);
 });
 
-document.addEventListener("mouseup", function(event) {
-	document.removeEventListener("mousemove", updateVolume);
+document.addEventListener("mouseup", function (event) {
+  document.removeEventListener("mousemove", updateVolume);
 });
 
 function updateVolume(event) {
-	let volume = (event.clientX - volumeBar.getBoundingClientRect().left) / volumeBar.offsetWidth;
-  if(volume > 1){
+  let volume =
+    (event.clientX - volumeBar.getBoundingClientRect().left) /
+    volumeBar.offsetWidth;
+  if (volume > 1) {
     volume = 1;
   }
-  if(volume < 0){
+  if (volume < 0) {
     volume = 0;
   }
   console.log(volume);
-	soundNotif.volume = volume;
-	volumeIndicator.style.left = volume * 100 + "%";
-	volumeBar.setAttribute("aria-valuenow", volume * 100);
-	volumeLabel.textContent = Math.round(volume * 100) + "%";
-	
-	// Désactive la modification du son lorsque l'utilisateur relâche le clic de la souris
-	if (event.type === "mouseup") {
-		document.removeEventListener("mousemove", updateVolume);
-	}
+  soundNotif.volume = volume;
+  volumeIndicator.style.left = volume * 100 + "%";
+  volumeBar.setAttribute("aria-valuenow", volume * 100);
+  volumeLabel.textContent = Math.round(volume * 100) + "%";
+
+  // Désactive la modification du son lorsque l'utilisateur relâche le clic de la souris
+  if (event.type === "mouseup") {
+    document.removeEventListener("mousemove", updateVolume);
+  }
 }
