@@ -1,7 +1,6 @@
 const { app, BrowserWindow, ipcMain, screen } = require("electron");
 const { Notification } = require('electron')
 const path = require("path");
-const notifier = require('node-notifier');
 
 
 try {
@@ -11,19 +10,20 @@ try {
 let mainWindow;
 let screenWidth;
 let screenHeight;
-let mainWidth = 750;
-let mainHeight = 700;
+let mainWidth = 500;
+let mainHeight = 500;
 let focusWidth = 100;
 let focusHeight = 58;
 let notification;
 
 
 
+
 const createWindow = () => {
   // Création de la fenêtre de navigateur.
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: mainWidth,
+    height: mainHeight,
     center: true,
     frame: false,
     webPreferences: {
@@ -32,8 +32,8 @@ const createWindow = () => {
     },
   });
   
-  //afficher la console
-   mainWindow.webContents.openDevTools()
+  // afficher la console
+  // mainWindow.webContents.openDevTools()
   // et chargement de l'index.html de l'application.
   mainWindow.loadFile("windows/main/main.html");
 };
@@ -47,9 +47,7 @@ function setMainWindow () {
   if (mainWindow.isMaximized()) {
     mainWindow.unmaximize();
   }
-  screenWidth = screen.getPrimaryDisplay().size.width;
-  screenHeight = screen.getPrimaryDisplay().size.height;
-
+  
   mainWindow.setContentSize(focusWidth, focusHeight);
   mainWindow.setPosition(screenWidth - focusWidth, (screenHeight - focusHeight)/2);
   
@@ -62,7 +60,7 @@ function setMainWindow () {
 
 function setFocusWindow () {
   mainWindow.setContentSize(mainWidth, mainHeight);
-  mainWindow.setPosition(350, 20);
+  mainWindow.center();
   //gameWindow.webContents.openDevTools();
   mainWindow.setAlwaysOnTop(false, "screen-saver");
   mainWindow.setVisibleOnAllWorkspaces(true);
@@ -109,7 +107,8 @@ app.whenReady().then(() => {
   ipcMain.on('close-windows', closeWindow);
   ipcMain.on('maximize-windows', maximizeWindow);
   ipcMain.on('minimize-windows', minimizeWindow);
-
+  screenWidth = screen.getPrimaryDisplay().size.width;
+  screenHeight = screen.getPrimaryDisplay().size.height;
   createWindow();
   app.on("activate", () => {
     // Sur macOS il est commun de re-créer une fenêtre  lors
